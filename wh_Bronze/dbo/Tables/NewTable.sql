@@ -1,5 +1,5 @@
 CREATE TABLE [dbo].[NewTable] (
-    [Id] INT NOT NULL
+    [Id] INT NULL
 );
 
 
