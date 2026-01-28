@@ -1,0 +1,51 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
+  
+- script: dotnet tool update -g microsoft.sqlpackage
+  displayName: 'Install SqlPackage'
+
+# 1) Restore NuGet packages (if needed)
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet 6.x'
+
+- task: NuGetCommand@2
+  displayName: 'Restore NuGet packages'
+  inputs:
+    restoreSolution: '**/*.sln'   # if you don’t have a .sln, this is optional
+
+# 2) Build the SQL Project (.sqlproj)
+- task: VSBuild@1
+  displayName: 'Build SQL Project to generate DACPAC'
+  inputs:
+    solution: 'wh_Bronze/wh_Bronze.sqlproj'  # path to your sqlproj
+    configuration: '$(buildConfiguration)'
+    platform: 'Any CPU'
+    msbuildArgs: '/p:OutputPath=$(Build.ArtifactStagingDirectory)'
+
+# 3) Publish the DACPAC as an artifact (optional, e.g., for use in release later)
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish DACPAC Artifact'
+  inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'dacpac'
+
+#4) Download the DACPAC artifact from build
+- download: current
+  artifact: dacpac
