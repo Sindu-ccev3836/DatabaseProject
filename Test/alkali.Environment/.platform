@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Environment",
+    "displayName": "alkali",
+    "description": "Environment"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a70c974d-cb0f-883a-4c39-cfb082c59e32"
+  }
+}
